@@ -1,118 +1,123 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+import { Identity } from "@semaphore-protocol/identity"
+import { useRouter } from "next/router"
+import Link from "next/link"
+import React, { useEffect, useState } from "react"
+import { getGroup } from "@/utils/bandadaApi"
+import Stepper from "@/components/stepper"
 
 export default function Home() {
-  return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+  const router = useRouter()
+
+  const [_identity, setIdentity] = useState<Identity>()
+
+  const localStorageTag = process.env.NEXT_PUBLIC_LOCAL_STORAGE_TAG!
+
+  useEffect(() => {
+    const identityString = localStorage.getItem(localStorageTag)
+
+    if (identityString) {
+      const identity = new Identity(identityString)
+
+      setIdentity(identity)
+
+      console.log(
+        "Your Semaphore identity was retrieved from the browser cache 👌🏽"
+      )
+    } else {
+      console.log("Create your Semaphore identity 👆🏽")
+    }
+  }, [localStorageTag])
+
+  const createIdentity = async () => {
+    const identity = new Identity()
+
+    setIdentity(identity)
+
+    localStorage.setItem(localStorageTag, identity.toString())
+
+    console.log("Your new Semaphore identity was just created 🎉")
+  }
+
+  const joinGroup = async () => {
+    const groupId = process.env.NEXT_PUBLIC_GROUP_ID!
+    const group = await getGroup(groupId)
+
+    if (group === null) {
+      alert("Some error ocurred! Group not found!")
+      return
+    }
+
+    const providerName = group.credentials.id.split("_")[0].toLowerCase()
+
+    const identityCommitment = _identity?.getCommitment().toString()
+
+    window.open(
+      `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/credentials?group=${groupId}&member=${identityCommitment}&provider=${providerName}&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}`
+    )
+  }
+
+  const renderIdentity = () => {
+    return (
+      <div className="lg:w-2/5 md:w-2/4 w-full">
+        <div className="flex justify-between items-center mb-3">
+          <div className="text-2xl font-semibold text-slate-700">Identity</div>
+          <div>
+            <button
+              className="flex justify-center items-center w-auto space-x-1 verify-btn text-lg font-medium rounded-md bg-gradient-to-r text-slate-700"
+              onClick={createIdentity}
+            >
+              <span>New</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="flex justify-center items-center">
+          <div className="overflow-auto border-2 p-7 border-slate-300 space-y-3">
+            <div className="flex space-x-2">
+              <div>Trapdoor:</div>
+              <div>{_identity?.trapdoor.toString()}</div>
+            </div>
+            <div className="flex space-x-2">
+              <div>Nullifier:</div>
+              <div>{_identity?.nullifier.toString()}</div>
+            </div>
+            <div className="flex space-x-2">
+              <div>Commitment:</div>
+              <div>{_identity?.commitment.toString()}</div>
+            </div>
+          </div>
         </div>
       </div>
+    )
+  }
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+  return (
+    <div>
+      <div>
+        <div className="flex justify-center items-center">
+          <h1 className="text-3xl font-semibold text-slate-700">Identities</h1>
+        </div>
+        <div className="flex justify-center items-center mt-20">
+          {_identity ? (
+            renderIdentity()
+          ) : (
+            <button
+              className="flex justify-center items-center w-auto space-x-3 verify-btn text-lg font-medium rounded-md px-5 py-3 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-slate-100"
+              onClick={createIdentity}
+            >
+              Create identity
+            </button>
+          )}
+        </div>
+        <div className="flex justify-center items-center mt-10">
+          <div className="lg:w-2/5 md:w-2/4 w-full">
+            <Stepper
+              step={1}
+              onNextClick={_identity && (() => router.push("/groups"))}
+            />
+          </div>
+        </div>
       </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   )
 }

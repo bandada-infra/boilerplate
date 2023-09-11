@@ -106,7 +106,7 @@ export default function ProofsPage() {
       const signals = await response.json()
 
       if (response.status === 200) {
-        setFeedback([...signals.map((signal: any) => signal.signal)].reverse())
+        setFeedback(signals.map((signal: any) => signal.signal))
 
         console.log(`Your feedback was posted 🎉`)
       } else {

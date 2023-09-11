@@ -5,7 +5,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { data, error } = await supabase.from("feedback").select()
+  const { data, error } = await supabase
+    .from("feedback")
+    .select()
+    .order("created_at", { ascending: false })
 
   if (data) {
     res.status(200).json(data)

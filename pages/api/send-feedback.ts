@@ -32,6 +32,7 @@ export default async function handler(
         .from("feedback")
         .insert([{ signal: feedback }])
         .select()
+        .order("created_at", { ascending: false })
 
       if (error) {
         console.error(error)

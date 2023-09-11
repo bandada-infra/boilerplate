@@ -76,7 +76,11 @@ export default function ProofsPage() {
         })
 
         if (response.status === 200) {
-          setFeedback([signal, ..._feedback])
+          const { data } = await response.json()
+
+          console.log(data[0].signal)
+
+          if (data) setFeedback([data[0].signal, ..._feedback])
 
           console.log(`Your feedback was posted 🎉`)
         } else {
@@ -102,7 +106,7 @@ export default function ProofsPage() {
       const signals = await response.json()
 
       if (response.status === 200) {
-        setFeedback(signals)
+        setFeedback([...signals.map((signal: any) => signal.signal)].reverse())
 
         console.log(`Your feedback was posted 🎉`)
       } else {

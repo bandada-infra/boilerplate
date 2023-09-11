@@ -6,12 +6,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (typeof process.env.NEXT_PUBLIC_GROUP_ID !== "string") {
+  if (typeof process.env.NEXT_PUBLIC_BANDADA_GROUP_ID !== "string") {
     throw new Error(
-      "Please, define NEXT_PUBLIC_GROUP_ID in your .env.development.local or .env.production.local file"
+      "Please, define NEXT_PUBLIC_BANDADA_GROUP_ID in your .env.development.local or .env.production.local file"
     )
   }
-  const groupId = process.env.NEXT_PUBLIC_GROUP_ID!
+  const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
 
   const { feedback, merkleTreeRoot, nullifierHash, proof } = req.body
 

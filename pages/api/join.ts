@@ -5,12 +5,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (typeof process.env.NEXT_PUBLIC_GROUP_API_KEY !== "string") {
+  if (typeof process.env.NEXT_PUBLIC_BANDADA_GROUP_API_KEY !== "string") {
     throw new Error(
-      "Please, define NEXT_PUBLIC_GROUP_API_KEY in your .env.development.local or .env.production.local file"
+      "Please, define NEXT_PUBLIC_BANDADA_GROUP_API_KEY in your .env.development.local or .env.production.local file"
     )
   }
-  const apiKey = process.env.NEXT_PUBLIC_GROUP_API_KEY!
+  const apiKey = process.env.NEXT_PUBLIC_BANDADA_GROUP_API_KEY!
   const { groupId, commitment } = req.body
 
   try {

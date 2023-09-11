@@ -10,7 +10,7 @@ export default function Header() {
         Feedback
       </Link>
       <a
-        href={`${process.env.NEXT_PUBLIC_DASHBOARD_URL}/groups/off-chain/${process.env.NEXT_PUBLIC_GROUP_ID}`}
+        href={`${process.env.NEXT_PUBLIC_BANDADA_DASHBOARD_URL}/groups/off-chain/${process.env.NEXT_PUBLIC_BANDADA_GROUP_ID}`}
         className="flex space-x-1 text-blue-600 hover:underline"
         target="_blank"
         rel="noreferrer noopener nofollow"

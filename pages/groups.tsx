@@ -14,7 +14,7 @@ export default function GroupsPage() {
 
   const localStorageTag = process.env.NEXT_PUBLIC_LOCAL_STORAGE_TAG!
 
-  const groupId = process.env.NEXT_PUBLIC_GROUP_ID!
+  const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
 
   const getUsers = useCallback(async () => {
     const users = await getMembersGroup(groupId)
@@ -57,7 +57,7 @@ export default function GroupsPage() {
     const identityCommitment = _identity?.getCommitment().toString()
 
     window.open(
-      `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/credentials?group=${groupId}&member=${identityCommitment}&provider=${providerName}&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}`
+      `${process.env.NEXT_PUBLIC_BANDADA_DASHBOARD_URL}/credentials?group=${groupId}&member=${identityCommitment}&provider=${providerName}&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}`
     )
     setLoading(false)
     setIsGroupMember(true)

@@ -21,7 +21,7 @@ export default function ProofsPage() {
 
   const localStorageTag = process.env.NEXT_PUBLIC_LOCAL_STORAGE_TAG!
 
-  const groupId = process.env.NEXT_PUBLIC_GROUP_ID!
+  const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
 
   useEffect(() => {
     const identityString = localStorage.getItem(localStorageTag)

@@ -1,7 +1,7 @@
 import { Identity } from "@semaphore-protocol/identity"
 import { useRouter } from "next/router"
 import React, { useCallback, useEffect, useState } from "react"
-import { getMembersGroup } from "@/utils/bandadaApi"
+import { getGroup, getMembersGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
 
 export default function GroupsPage() {
@@ -43,27 +43,26 @@ export default function GroupsPage() {
     isMember()
   }, [router, getUsers, localStorageTag])
 
-  // const joinCredentialGroup = async () => {
-  //   setLoading(true)
+  const joinCredentialGroup = async () => {
+    setLoading(true)
 
-  //   const group = await getGroup(groupId)
-  //   if (group === null) {
-  //     alert("Some error ocurred! Group not found!")
-  //     return
-  //   }
+    const group = await getGroup(groupId)
+    if (group === null) {
+      alert("Some error ocurred! Group not found!")
+      return
+    }
 
-  //   const providerName = group.credentials.id.split("_")[0].toLowerCase()
+    const providerName = group.credentials.id.split("_")[0].toLowerCase()
 
-  //   const identityCommitment = _identity?.getCommitment().toString()
+    const identityCommitment = _identity?.getCommitment().toString()
 
-  //   window.open(
-  //     `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/credentials?group=${groupId}&member=${identityCommitment}&provider=${providerName}&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}`
-  //   )
-  //   setLoading(false)
-  //   setIsGroupMember(true)
-  //   const users = await getMembersGroup(groupId)
-  //   setUsers(users!)
-  // }
+    window.open(
+      `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/credentials?group=${groupId}&member=${identityCommitment}&provider=${providerName}&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}`
+    )
+    setLoading(false)
+    setIsGroupMember(true)
+    getUsers()
+  }
 
   const joinGroup = async () => {
     setLoading(true)

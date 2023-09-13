@@ -37,3 +37,5 @@ next-env.d.ts
 .yarn
 
 supabase
+
+*.code-workspace

@@ -88,7 +88,7 @@ export default function GroupsPage() {
       }
     } catch (error) {
       console.log(error)
-      
+
       alert("Some error occurred, please try again!")
     } finally {
       setLoading(false)
@@ -123,18 +123,24 @@ export default function GroupsPage() {
           </button>
         </div>
 
-        <div className="grid-rows-1 place-content-center">
-          <div className="space-y-3">
-            {_users?.map((user, i) => (
-              <div
-                key={i}
-                className="overflow-auto border-2 p-3 border-slate-300 space-y-3"
-              >
-                {user}
-              </div>
-            ))}
+        {_users ? (
+          <div className="grid-rows-1 place-content-center">
+            <div className="space-y-3">
+              {_users?.map((user, i) => (
+                <div
+                  key={i}
+                  className="overflow-auto border-2 p-3 border-slate-300 space-y-3"
+                >
+                  {user}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex justify-center items-center mt-20">
+            <div className="loader-app"></div>
+          </div>
+        )}
       </div>
     )
   }

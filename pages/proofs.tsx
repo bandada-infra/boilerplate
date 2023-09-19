@@ -148,18 +148,24 @@ export default function ProofsPage() {
           </button>
         </div>
 
-        <div className="grid-rows-1 place-content-center">
-          <div className="space-y-3">
-            {_feedback?.map((feedback, i) => (
-              <div
-                key={i}
-                className="overflow-auto border-2 p-3 border-slate-300 space-y-3"
-              >
-                {decodeBytes32String(toBeHex(feedback))}
-              </div>
-            ))}
+        {_feedback ? (
+          <div className="grid-rows-1 place-content-center">
+            <div className="space-y-3">
+              {_feedback?.map((feedback, i) => (
+                <div
+                  key={i}
+                  className="overflow-auto border-2 p-3 border-slate-300 space-y-3"
+                >
+                  {decodeBytes32String(toBeHex(feedback))}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex justify-center items-center mt-20">
+            <div className="loader-app"></div>
+          </div>
+        )}
       </div>
     )
   }

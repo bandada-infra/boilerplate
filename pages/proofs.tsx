@@ -84,7 +84,7 @@ export default function ProofsPage() {
 
           console.log(`Your feedback was posted 🎉`)
         } else {
-          // alert("Some error occurred, please try again!")
+          console.log(await response.text())
           alert(await response.text())
         }
       } catch (error) {
@@ -109,7 +109,7 @@ export default function ProofsPage() {
       if (response.status === 200) {
         setFeedback(signals.map((signal: any) => signal.signal))
 
-        console.log(`Your feedback was posted 🎉`)
+        console.log("Feedback retrieved from the database")
       } else {
         alert("Some error occurred, please try again!")
       }

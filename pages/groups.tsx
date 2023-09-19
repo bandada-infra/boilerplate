@@ -84,11 +84,11 @@ export default function GroupsPage() {
         const users = await getMembersGroup(groupId)
         setUsers(users!.reverse())
       } else {
-        alert("Some error occurred, please try again!")
+        alert(await response.json)
       }
     } catch (error) {
-      console.error(error)
-
+      console.log(error)
+      
       alert("Some error occurred, please try again!")
     } finally {
       setLoading(false)

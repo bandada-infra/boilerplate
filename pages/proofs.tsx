@@ -84,7 +84,8 @@ export default function ProofsPage() {
 
           console.log(`Your feedback was posted 🎉`)
         } else {
-          alert("Some error occurred, please try again!")
+          // alert("Some error occurred, please try again!")
+          alert(await response.text())
         }
       } catch (error) {
         console.error(error)

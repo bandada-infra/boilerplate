@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { addMemberByApiKey } from "@/utils/bandadaApi"
+import { addMemberByApiKey, getGroup } from "@/utils/bandadaApi"
+import supabase from "@/utils/supabaseClient"
+import { getRoot } from "@/utils/useSemaphore"
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,7 +17,24 @@ export default async function handler(
 
   try {
     await addMemberByApiKey(groupId, commitment, apiKey)
-    res.status(200).end()
+    const groupInfo = await getGroup(groupId)
+    if (groupInfo) {
+      const groupRoot = await getRoot(
+        groupId,
+        groupInfo.treeDepth,
+        groupInfo.members
+      )
+      const { data, error } = await supabase
+        .from("root_history")
+        .insert([{ root: groupRoot.toString() }])
+
+      if (error) {
+        console.error(error)
+        res.status(500).end()
+      }
+
+      res.status(200).end()
+    }
   } catch (error) {
     console.error(error)
     res.status(500).end()

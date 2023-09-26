@@ -77,7 +77,7 @@ export default function ProofsPage() {
         })
 
         if (response.status === 200) {
-          const { data } = await response.json()
+          const data = await response.json()
 
           console.log(data[0].signal)
 

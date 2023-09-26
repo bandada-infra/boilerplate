@@ -1,7 +1,7 @@
 import { Identity } from "@semaphore-protocol/identity"
 import { useRouter } from "next/router"
 import React, { useCallback, useEffect, useState } from "react"
-import { getGroup, getMembersGroup } from "@/utils/bandadaApi"
+import { getMembersGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
 import Divider from "@/components/divider"
 

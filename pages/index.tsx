@@ -1,6 +1,5 @@
 import { Identity } from "@semaphore-protocol/identity"
 import { useRouter } from "next/router"
-import Link from "next/link"
 import React, { useEffect, useState } from "react"
 import { getGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"

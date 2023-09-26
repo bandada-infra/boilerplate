@@ -31,6 +31,7 @@ export default async function handler(
     if (error) {
       console.error(error)
       res.status(500).end()
+      return
     }
 
     res.status(200).end()

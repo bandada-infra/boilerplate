@@ -4,6 +4,7 @@ import Link from "next/link"
 import React, { useEffect, useState } from "react"
 import { getGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
+import Divider from "@/components/divider"
 
 export default function Home() {
   const router = useRouter()
@@ -97,7 +98,29 @@ export default function Home() {
         <div className="flex justify-center items-center">
           <h1 className="text-3xl font-semibold text-slate-700">Identities</h1>
         </div>
-        <div className="flex justify-center items-center mt-20">
+        <div className="flex justify-center items-center mt-10">
+          <span className="lg:w-2/5 md:w-2/4 w-full">
+            <span>
+              Users interact with Bandada using a{" "}
+              <a
+                className="space-x-1 text-blue-700 hover:underline"
+                href="https://semaphore.pse.dev/docs/guides/identities"
+                target="_blank"
+                rel="noreferrer noopener nofollow"
+              >
+                Semaphore identity
+              </a>{" "}
+              (similar to Ethereum accounts). It contains three values:
+            </span>
+            <ol className="list-decimal pl-4 mt-5 space-y-3">
+              <li>Trapdoor: private, known only by user</li>
+              <li>Nullifier: private, known only by user</li>
+              <li>Commitment: public</li>
+            </ol>
+            <Divider />
+          </span>
+        </div>
+        <div className="flex justify-center items-center mt-5">
           {_identity ? (
             renderIdentity()
           ) : (

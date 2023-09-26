@@ -11,6 +11,7 @@ import {
   decodeBytes32String,
   toBeHex
 } from "ethers"
+import Divider from "@/components/divider"
 
 export default function ProofsPage() {
   const router = useRouter()
@@ -176,7 +177,26 @@ export default function ProofsPage() {
         <div className="flex justify-center items-center">
           <h1 className="text-3xl font-semibold text-slate-700">Groups</h1>
         </div>
-        <div className="flex justify-center items-center mt-20">
+        <div className="flex justify-center items-center mt-10">
+          <span className="lg:w-2/5 md:w-2/4 w-full">
+            <span>
+              Members can anonymously{" "}
+              <a
+                className="space-x-1 text-blue-700 hover:underline"
+                href="https://semaphore.pse.dev/docs/guides/proofs"
+                target="_blank"
+                rel="noreferrer noopener nofollow"
+              >
+                prove
+              </a>{" "}
+              that they are part of a group and that they are generating their
+              own signals. Signals could be anonymous votes, leaks, reviews, or
+              feedback.
+            </span>
+            <Divider />
+          </span>
+        </div>
+        <div className="flex justify-center items-center mt-5">
           {renderFeedback()}
         </div>
         <div className="flex justify-center items-center mt-10">

@@ -3,6 +3,7 @@ import { useRouter } from "next/router"
 import React, { useCallback, useEffect, useState } from "react"
 import { getGroup, getMembersGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
+import Divider from "@/components/divider"
 
 export default function GroupsPage() {
   const router = useRouter()
@@ -165,7 +166,17 @@ export default function GroupsPage() {
         <div className="flex justify-center items-center">
           <h1 className="text-3xl font-semibold text-slate-700">Groups</h1>
         </div>
-        <div className="flex justify-center items-center mt-20">
+        <div className="flex justify-center items-center mt-10">
+          <span className="lg:w-2/5 md:w-2/4 w-full">
+            <span>
+              Bandada groups are binary Incremental Merkle Trees in which each
+              leaf contains an identity commitment for a user. Groups can be
+              abstracted to represent events, polls, or organizations.
+            </span>
+            <Divider />
+          </span>
+        </div>
+        <div className="flex justify-center items-center mt-10">
           {renderGroup()}
         </div>
         <div className="flex justify-center items-center mt-10">

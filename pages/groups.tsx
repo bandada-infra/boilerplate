@@ -46,19 +46,33 @@ export default function GroupsPage() {
   const joinCredentialGroup = async () => {
     setLoading(true)
 
-    const group = await getGroup(groupId)
-    if (group === null) {
-      alert("Some error ocurred! Group not found!")
-      return
+    const commitment = _identity?.commitment.toString()
+
+    try {
+      const response = await fetch("api/join-credential", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          groupId,
+          commitment
+        })
+      })
+
+      if (response.status === 200) {
+        setIsGroupMember(true)
+        const users = await getMembersGroup(groupId)
+        setUsers(users!.reverse())
+      } else {
+        alert(await response.json)
+      }
+    } catch (error) {
+      console.log(error)
+
+      alert("Some error occurred, please try again!")
+    } finally {
+      setLoading(false)
     }
 
-    const providerName = group.credentials.id.split("_")[0].toLowerCase()
-
-    const identityCommitment = _identity?.getCommitment().toString()
-
-    window.open(
-      `${process.env.NEXT_PUBLIC_BANDADA_DASHBOARD_URL}/credentials?group=${groupId}&member=${identityCommitment}&provider=${providerName}&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}`
-    )
     setLoading(false)
     setIsGroupMember(true)
     getUsers()
@@ -70,7 +84,7 @@ export default function GroupsPage() {
     const commitment = _identity?.commitment.toString()
 
     try {
-      const response = await fetch("api/join", {
+      const response = await fetch("api/join-api-key", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -17,14 +17,10 @@ export default async function handler(
 
   try {
     await addMemberByApiKey(groupId, commitment, apiKey)
-    const groupInfo = await getGroup(groupId)
-    if (groupInfo) {
-      const groupRoot = await getRoot(
-        groupId,
-        groupInfo.treeDepth,
-        groupInfo.members
-      )
-      const { data, error } = await supabase
+    const group = await getGroup(groupId)
+    if (group) {
+      const groupRoot = await getRoot(groupId, group.treeDepth, group.members)
+      const { error } = await supabase
         .from("root_history")
         .insert([{ root: groupRoot.toString() }])
 

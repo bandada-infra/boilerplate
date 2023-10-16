@@ -145,7 +145,7 @@ export default function GroupsPage() {
         <div className="flex justify-center items-center my-3">
           <button
             className="flex justify-center items-center w-full space-x-3 disabled:cursor-not-allowed disabled:opacity-50 verify-btn text-lg font-medium rounded-md px-5 py-3 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-slate-100"
-            onClick={joinCredentialGroup}
+            onClick={joinGroup}
             disabled={_loading || _isGroupMember}
           >
             {_loading && <div className="loader"></div>}

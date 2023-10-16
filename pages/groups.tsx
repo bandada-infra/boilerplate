@@ -1,9 +1,10 @@
 import { Identity } from "@semaphore-protocol/identity"
 import { useRouter } from "next/router"
 import React, { useCallback, useEffect, useState } from "react"
-import { getMembersGroup } from "@/utils/bandadaApi"
+import { getMembersGroup, getGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
 import Divider from "@/components/divider"
+import { getRoot } from "@/utils/useSemaphore"
 
 export default function GroupsPage() {
   const router = useRouter()
@@ -49,13 +50,27 @@ export default function GroupsPage() {
 
     const commitment = _identity?.commitment.toString()
 
+    const group = await getGroup(groupId)
+    if (group === null) {
+      alert("Some error ocurred! Group not found!")
+      return
+    }
+
+    const providerName = group.credentials.id.split("_")[0].toLowerCase()
+    console.log(providerName)
+
+    window.open(
+      `${process.env.NEXT_PUBLIC_BANDADA_DASHBOARD_URL}/credentials?group=${groupId}&member=${commitment}&provider=${providerName}&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/groups`
+    )
+
+    const groupRoot = await getRoot(groupId, group.treeDepth, group.members)
+
     try {
       const response = await fetch("api/join-credential", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          groupId,
-          commitment
+          groupRoot
         })
       })
 
@@ -130,7 +145,7 @@ export default function GroupsPage() {
         <div className="flex justify-center items-center my-3">
           <button
             className="flex justify-center items-center w-full space-x-3 disabled:cursor-not-allowed disabled:opacity-50 verify-btn text-lg font-medium rounded-md px-5 py-3 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-slate-100"
-            onClick={joinGroup}
+            onClick={joinCredentialGroup}
             disabled={_loading || _isGroupMember}
           >
             {_loading && <div className="loader"></div>}

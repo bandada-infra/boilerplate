@@ -35,18 +35,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bandada/api-sdk@npm:^1.0.0-alpha":
-  version: 1.0.0-alpha
-  resolution: "@bandada/api-sdk@npm:1.0.0-alpha"
+"@bandada/api-sdk@npm:^1.0.0-beta":
+  version: 1.0.0-beta
+  resolution: "@bandada/api-sdk@npm:1.0.0-beta"
   dependencies:
-    "@bandada/utils": 1.0.0-alpha
-  checksum: b9fa36fd1fd1d327f98afbb775f5f8c03aa99df3c413e3aea676a821969ff955397236461aefa4162520d7ed2a74fd3fba01131cd4a16a2104d2ad01f2f49798
+    "@bandada/utils": 1.0.0-beta
+  checksum: 28df428915a31ed2fa8ecbdb4eefb1ec3711afcf511520f19f39f41644410619307253b0d9f78875baab7fe6a982d3fc072fc0b0b6d2fe65545f78cb9cbf0859
   languageName: node
   linkType: hard
 
-"@bandada/utils@npm:1.0.0-alpha":
-  version: 1.0.0-alpha
-  resolution: "@bandada/utils@npm:1.0.0-alpha"
+"@bandada/utils@npm:1.0.0-beta":
+  version: 1.0.0-beta
+  resolution: "@bandada/utils@npm:1.0.0-beta"
   dependencies:
     "@ethersproject/abstract-signer": ^5.7.0
     "@ethersproject/address": ^5.7.0
@@ -55,7 +55,7 @@ __metadata:
     "@ethersproject/strings": ^5.7.0
     "@ethersproject/wallet": ^5.7.0
     axios: ^1.3.3
-  checksum: 87d802b4514bb9d3a5673a3b6924e43b860f5578b6366bca3ae34c8520a602eca2985db45e4300888b2676d77bcbef84a01921fbcde568198ca17ce574f0a970
+  checksum: cab24d436b3ecf2115473a7005fd42b51f2c2588140fdc0ffd8df1ca3b3bc6d2e09acdf0f9f6181709f262d9405510ebcbe6ea8077c2b0b390601ec2ef19bdaa
   languageName: node
   linkType: hard
 
@@ -1387,7 +1387,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "bandada-tutorial@workspace:."
   dependencies:
-    "@bandada/api-sdk": ^1.0.0-alpha
+    "@bandada/api-sdk": ^1.0.0-beta
     "@semaphore-protocol/group": ^3.11.0
     "@semaphore-protocol/identity": ^3.11.0
     "@semaphore-protocol/proof": ^3.11.0

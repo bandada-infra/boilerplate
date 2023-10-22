@@ -157,8 +157,9 @@ export default function GroupsPage() {
         </div>
 
         {_renderInfoLoading && (
-          <div className="flex justify-center items-center mt-20">
+          <div className="flex justify-center items-center mt-20 gap-2">
             <div className="loader-app"></div>
+            <div>Fetching group members</div>
           </div>
         )}
 

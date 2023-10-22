@@ -12,6 +12,7 @@ export default function GroupsPage() {
   const [_identity, setIdentity] = useState<Identity>()
   const [_isGroupMember, setIsGroupMember] = useState<boolean>(false)
   const [_loading, setLoading] = useState<boolean>(false)
+  const [_renderInfoLoading, setRenderInfoLoading] = useState<boolean>(false)
   const [_users, setUsers] = useState<string[]>([])
 
   const localStorageTag = process.env.NEXT_PUBLIC_LOCAL_STORAGE_TAG!
@@ -19,8 +20,10 @@ export default function GroupsPage() {
   const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
 
   const getUsers = useCallback(async () => {
+    setRenderInfoLoading(true)
     const users = await getMembersGroup(groupId)
     setUsers(users!.reverse())
+    setRenderInfoLoading(false)
     return users
   }, [groupId])
 
@@ -146,12 +149,18 @@ export default function GroupsPage() {
           <button
             className="flex justify-center items-center w-full space-x-3 disabled:cursor-not-allowed disabled:opacity-50 verify-btn text-lg font-medium rounded-md px-5 py-3 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-slate-100"
             onClick={joinGroup}
-            disabled={_loading || _isGroupMember}
+            disabled={_loading || _isGroupMember || _renderInfoLoading}
           >
             {_loading && <div className="loader"></div>}
             <span>Join group</span>
           </button>
         </div>
+
+        {_renderInfoLoading && (
+          <div className="flex justify-center items-center mt-20">
+            <div className="loader-app"></div>
+          </div>
+        )}
 
         {_users ? (
           <div className="grid-rows-1 place-content-center">

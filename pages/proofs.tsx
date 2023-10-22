@@ -18,6 +18,7 @@ export default function ProofsPage() {
 
   const [_identity, setIdentity] = useState<Identity>()
   const [_loading, setLoading] = useState<boolean>(false)
+  const [_renderInfoLoading, setRenderInfoLoading] = useState<boolean>(false)
   const [_feedback, setFeedback] = useState<string[]>([])
 
   const localStorageTag = process.env.NEXT_PUBLIC_LOCAL_STORAGE_TAG!
@@ -99,6 +100,7 @@ export default function ProofsPage() {
   }
 
   const getFeedback = async () => {
+    setRenderInfoLoading(true)
     try {
       const response = await fetch("api/get-feedback", {
         method: "GET",
@@ -118,6 +120,8 @@ export default function ProofsPage() {
       console.error(error)
 
       alert("Some error occurred, please try again!")
+    } finally {
+      setRenderInfoLoading(false)
     }
   }
 
@@ -142,12 +146,18 @@ export default function ProofsPage() {
           <button
             className="flex justify-center items-center w-full space-x-3 disabled:cursor-not-allowed disabled:opacity-50 verify-btn text-lg font-medium rounded-md px-5 py-3 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-slate-100"
             onClick={sendFeedback}
-            disabled={_loading}
+            disabled={_loading || _renderInfoLoading}
           >
             {_loading && <div className="loader"></div>}
             <span>Send Feedback</span>
           </button>
         </div>
+
+        {_renderInfoLoading && (
+          <div className="flex justify-center items-center mt-20">
+            <div className="loader-app"></div>
+          </div>
+        )}
 
         {_feedback ? (
           <div className="grid-rows-1 place-content-center">

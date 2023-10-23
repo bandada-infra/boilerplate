@@ -26,7 +26,7 @@ Copy the `env.development.local.example` file content in a `.env.development.loc
 cp env.development.local.example .env.development.local
 ```
 
-and add your environment variables: group id and if necessary also the group api key.
+and add your environment variables: group id and group api key (if the group is not a credential group).
 
 ### Run de development server
 

@@ -165,7 +165,7 @@ export default function GroupsPage() {
 
         {_users ? (
           <div className="grid-rows-1 place-content-center">
-            <div className="space-y-3 overflow-auto h-80">
+            <div className="space-y-3 overflow-auto max-h-80">
               {_users?.map((user, i) => (
                 <div
                   key={i}

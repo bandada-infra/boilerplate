@@ -18,6 +18,16 @@ git clone https://github.com/vplasencia/bandada-semaphore-demo.git
 yarn
 ```
 
+### Add environment variables
+
+Copy the `env.development.local.example` file content in a `.env.development.local` file:
+
+```bash
+cp env.development.local.example .env.development.local
+```
+
+and add your environment variables: group id and if necessary also the group api key.
+
 ### Run de development server
 
 ```bash

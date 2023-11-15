@@ -11,7 +11,7 @@
     "prettier:write": "prettier -w ."
   },
   "dependencies": {
-    "@bandada/api-sdk": "^1.0.0-beta",
+    "@bandada/api-sdk": "^1.0.0-beta.1",
     "@semaphore-protocol/group": "^3.11.0",
     "@semaphore-protocol/identity": "^3.11.0",
     "@semaphore-protocol/proof": "^3.11.0",

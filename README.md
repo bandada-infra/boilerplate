@@ -1,8 +1,12 @@
 # Bandada Tutorial
 
-This is an example of project using Bandada and Semaphore.
+This is an example of a project using Bandada and Semaphore completely off-chain.
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## Architecture of the app
+
+![Bandada-Semaphore Off-chain App Architecture](https://github.com/vplasencia/bandada-semaphore-demo/assets/52170174/b8d43564-01b3-4b7c-ae56-6efb1c5a8773)
 
 ## Run Locally
 

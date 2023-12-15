@@ -8,11 +8,21 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 The app has the code to use off-chain groups and credential off-chain groups. The `main` branch is using an off-chain group and the `credential-group-app` branch is using a credential group. 
 
-Using an **off-chain group** live app url:
+### Using off-chain groups:
+
+Live app url:
 https://bandada-semaphore-demo.vercel.app/
 
-Using a **credential off-chain group** live app url:
+Video demo: 
+https://youtu.be/ji6E5ES8JcI
+
+### Using off-chain credential groups:
+
+Live app url:
 https://credential-semaphore-demo.vercel.app/
+
+Video demo: 
+https://youtu.be/K_rAzjDPYyI
 
 ## Architecture of the app
 

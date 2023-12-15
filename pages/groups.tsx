@@ -1,13 +1,15 @@
 import { Identity } from "@semaphore-protocol/identity"
-import { useRouter } from "next/router"
 import React, { useCallback, useEffect, useState } from "react"
 import { getMembersGroup, getGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
 import Divider from "@/components/divider"
 import { getRoot } from "@/utils/useSemaphore"
+import { useSearchParams, useRouter } from "next/navigation"
 
 export default function GroupsPage() {
   const router = useRouter()
+
+  const searchParams = useSearchParams()
 
   const [_identity, setIdentity] = useState<Identity>()
   const [_isGroupMember, setIsGroupMember] = useState<boolean>(false)
@@ -48,24 +50,13 @@ export default function GroupsPage() {
     isMember()
   }, [router, getUsers, localStorageTag])
 
-  const joinCredentialGroup = async () => {
+  const afterJoinCredentialGroup = useCallback(async () => {
     setLoading(true)
-
-    const commitment = _identity?.commitment.toString()
-
     const group = await getGroup(groupId)
     if (group === null) {
       alert("Some error ocurred! Group not found!")
       return
     }
-
-    const providerName = group.credentials.id.split("_")[0].toLowerCase()
-    console.log(providerName)
-
-    window.open(
-      `${process.env.NEXT_PUBLIC_BANDADA_DASHBOARD_URL}/credentials?group=${groupId}&member=${commitment}&provider=${providerName}&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/groups`
-    )
-
     const groupRoot = await getRoot(groupId, group.treeDepth, group.members)
 
     try {
@@ -73,7 +64,7 @@ export default function GroupsPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          groupRoot
+          groupRoot: groupRoot.toString()
         })
       })
 
@@ -90,11 +81,39 @@ export default function GroupsPage() {
       alert("Some error occurred, please try again!")
     } finally {
       setLoading(false)
+      setIsGroupMember(true)
+      router.push("/groups")
+    }
+  }, [groupId, router])
+
+  useEffect(() => {
+    async function execAfterJoinCredentialGroup() {
+      const param = searchParams.get("redirect")
+      if (param === "true") {
+        await afterJoinCredentialGroup()
+      }
+    }
+    execAfterJoinCredentialGroup()
+  }, [searchParams, afterJoinCredentialGroup])
+
+  const joinCredentialGroup = async () => {
+    setLoading(true)
+
+    const commitment = _identity?.commitment.toString()
+
+    const group = await getGroup(groupId)
+    if (group === null) {
+      alert("Some error ocurred! Group not found!")
+      return
     }
 
-    setLoading(false)
-    setIsGroupMember(true)
-    getUsers()
+    const providerName = group.credentials.id.split("_")[0].toLowerCase()
+    console.log(providerName)
+
+    window.open(
+      `${process.env.NEXT_PUBLIC_BANDADA_DASHBOARD_URL}/credentials?group=${groupId}&member=${commitment}&provider=${providerName}&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/groups?redirect=true`,
+      "_top"
+    )
   }
 
   const joinGroup = async () => {
@@ -210,7 +229,7 @@ export default function GroupsPage() {
               step={2}
               onPrevClick={() => router.push("/")}
               onNextClick={
-                _identity && Boolean(_isGroupMember)
+                _identity && Boolean(_isGroupMember) && !_loading
                   ? () => router.push("/proofs")
                   : undefined
               }

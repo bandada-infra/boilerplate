@@ -5,10 +5,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { root } = req.body
+  const { groupRoot } = req.body
 
   try {
-    const { error } = await supabase.from("root_history").insert([{ root }])
+    const { error } = await supabase
+      .from("root_history")
+      .insert([{ root: groupRoot }])
 
     if (error) {
       console.error(error)

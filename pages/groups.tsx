@@ -9,6 +9,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 export default function GroupsPage() {
   const router = useRouter()
 
+  // To read the url params for credential groups
   const searchParams = useSearchParams()
 
   const [_identity, setIdentity] = useState<Identity>()
@@ -50,6 +51,7 @@ export default function GroupsPage() {
     isMember()
   }, [router, getUsers, localStorageTag])
 
+  // Function for credential groups to update the supabase backend 
   const afterJoinCredentialGroup = useCallback(async () => {
     setLoading(true)
     const group = await getGroup(groupId)
@@ -86,6 +88,7 @@ export default function GroupsPage() {
     }
   }, [groupId, router])
 
+  // useEffect that will be used for credential groups
   useEffect(() => {
     async function execAfterJoinCredentialGroup() {
       const param = searchParams.get("redirect")

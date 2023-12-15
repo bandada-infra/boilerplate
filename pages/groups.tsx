@@ -51,7 +51,7 @@ export default function GroupsPage() {
     isMember()
   }, [router, getUsers, localStorageTag])
 
-  // Function for credential groups to update the supabase backend 
+  // Function for credential groups to update the supabase backend
   const afterJoinCredentialGroup = useCallback(async () => {
     setLoading(true)
     const group = await getGroup(groupId)
@@ -71,9 +71,8 @@ export default function GroupsPage() {
       })
 
       if (response.status === 200) {
-        setIsGroupMember(true)
-        const users = await getMembersGroup(groupId)
-        setUsers(users!.reverse())
+        setLoading(false)
+        router.push("/groups")
       } else {
         alert(await response.json)
       }
@@ -83,8 +82,6 @@ export default function GroupsPage() {
       alert("Some error occurred, please try again!")
     } finally {
       setLoading(false)
-      setIsGroupMember(true)
-      router.push("/groups")
     }
   }, [groupId, router])
 

@@ -19,7 +19,7 @@ https://youtu.be/ji6E5ES8JcI
 ### Using off-chain credential groups:
 
 Live app url:
-https://credential-semaphore-demo.vercel.app/
+https://credential-bandada-semaphore.vercel.app/
 
 Video demo: 
 https://youtu.be/K_rAzjDPYyI

@@ -83,7 +83,7 @@ cp .env.development.local.example .env.development.local
 ```
 
 ```bash
-# These can be retrieved in the Bandada dashboard (e.g., https://<dashboard_url>/groups/off-chain/<group_id>).
+# These can be retrieved from the Bandada dashboard (e.g., https://<dashboard_url>/groups/off-chain/<group_id>).
 NEXT_PUBLIC_BANDADA_GROUP_ID=<bandada-group-id>
 NEXT_PUBLIC_BANDADA_GROUP_API_KEY=<bandada-group-api-key>
 # These can be retrieved in the Supabase dashboard (Settings -> API -> URL / Project API keys).

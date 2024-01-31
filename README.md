@@ -50,16 +50,6 @@ Once your project is ready, access the `Table Editor` from your project dashboar
 
 ![Tables schema](https://github.com/vplasencia/bandada-semaphore-demo/assets/20580910/e6c4362f-8f50-4ed2-87a1-a624a9b1052c)
 
-## Use credential off-chain group locally
-
-**Please make sure you are on the `credential-group-app` branch.**
-
-You must meet the same prerequisites and follow the same steps as previously outlined for the manual off-chain group but instead you have to create a credential off-chain group.
-
-**nb.** This tutorial assumes you are using Github Followers (_MinFollowers_) as credential provider.
-
-You need to **[Register a new OAuth application](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app)** using your Github account. Then configure the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` environment variables in the [Bandada APIs](https://github.com/privacy-scaling-explorations/bandada/blob/main/apps/api/.env.example) with the values that Github gives you after setting up the OAuth application. Note that this is necessary for Bandada to be able to act as a credential provider and validator for your group.
-
 ## 🛠 Installation
 
 Clone this repository running the following command in your terminal:

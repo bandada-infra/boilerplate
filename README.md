@@ -20,7 +20,7 @@ The Feedback Application is already deployed and configured with a manual off-ch
 You can begin interacting with both immediately without any additional configuration. Alternatively, you can watch a step-by-step walkthrough of how to use each application.
 
 - Manual off-chain group ([demo](https://bandada-semaphore-demo.vercel.app/), [video](https://youtu.be/ji6E5ES8JcI))
-- Credential off-chain group ([demo](https://credential-semaphore-demo.vercel.app/), [video](https://youtu.be/K_rAzjDPYyI))
+- Credential off-chain group ([demo](https://credential-bandada-semaphore.vercel.app/), [video](https://youtu.be/K_rAzjDPYyI))
 
 ## :classical_building: Architecture
 

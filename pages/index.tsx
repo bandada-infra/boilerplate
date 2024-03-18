@@ -1,7 +1,6 @@
 import { Identity } from "@semaphore-protocol/identity"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
-import { getGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
 import Divider from "@/components/divider"
 
@@ -36,24 +35,6 @@ export default function Home() {
     localStorage.setItem(localStorageTag, identity.toString())
 
     console.log("Your new Semaphore identity was just created 🎉")
-  }
-
-  const joinGroup = async () => {
-    const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
-    const group = await getGroup(groupId)
-
-    if (group === null) {
-      alert("Some error ocurred! Group not found!")
-      return
-    }
-
-    const providerName = group.credentials.id.split("_")[0].toLowerCase()
-
-    const identityCommitment = _identity?.getCommitment().toString()
-
-    window.open(
-      `${process.env.NEXT_PUBLIC_BANDADA_DASHBOARD_URL}/credentials?group=${groupId}&member=${identityCommitment}&provider=${providerName}&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}`
-    )
   }
 
   const renderIdentity = () => {

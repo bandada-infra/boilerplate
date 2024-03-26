@@ -84,7 +84,7 @@ export default function Home() {
               Users interact with Bandada using a{" "}
               <a
                 className="space-x-1 text-blue-700 hover:underline"
-                href="https://semaphore.pse.dev/docs/guides/identities"
+                href="https://docs.semaphore.pse.dev/guides/identities"
                 target="_blank"
                 rel="noreferrer noopener nofollow"
               >

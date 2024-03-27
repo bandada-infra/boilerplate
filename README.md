@@ -55,7 +55,7 @@ Once your project is ready, access the `Table Editor` from your project dashboar
 Clone this repository running the following command in your terminal:
 
 ```bash
-git clone https://github.com/vplasencia/bandada-semaphore-demo.git
+git clone https://github.com/bandada-infra/boilerplate
 ```
 
 and install the dependencies:
@@ -76,7 +76,7 @@ cp .env.development.local.example .env.development.local
 # These can be retrieved from the Bandada dashboard (e.g., https://<dashboard_url>/groups/off-chain/<group_id>).
 NEXT_PUBLIC_BANDADA_GROUP_ID=<bandada-group-id>
 NEXT_PUBLIC_BANDADA_GROUP_API_KEY=<bandada-group-api-key>
-# These can be retrieved in the Supabase dashboard (Settings -> API -> URL / Project API keys).
+# These can be retrieved in the Supabase dashboard (Project -> Settings -> API -> URL / Project API keys).
 NEXT_PUBLIC_SUPABASE_API_URL=<supabase-api-url>
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<supabase-anon-key>
 ```

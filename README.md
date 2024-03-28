@@ -43,7 +43,9 @@ git clone https://github.com/bandada-infra/bandada
 ```
 
 ## 2. 🗄️ Preparing Supabase
-Supabase is an open source Firebase alternative. You can either use it online or self-hosted (no sign-up needed). 
+
+Supabase is an open source Firebase alternative. You can either use it online or self-hosted (no sign-up needed).
+
 - Supabase online: create a [Supabase account](https://supabase.com/dashboard/sign-up) and a free tier project with basic configuration.
 - Supabase self-hosting: follow [self-hosting using Docker](https://supabase.com/docs/guides/self-hosting/docker).
 

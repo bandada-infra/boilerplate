@@ -58,7 +58,7 @@ export default function GroupsPage() {
       alert("Some error ocurred! Group not found!")
       return
     }
-    const groupRoot = group.fingerprint;
+    const groupRoot = group.fingerprint
 
     try {
       const response = await fetch("api/join-credential", {

@@ -4,6 +4,23 @@ import { getMembersGroup, getGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
 import Divider from "@/components/divider"
 import { useSearchParams, useRouter } from "next/navigation"
+import Dropdown from "@/components/dropdown"
+
+enum GroupType {
+  OffChain = "off-chain",
+  Credential = "credential"
+}
+
+const groupTypes = [
+  {
+    id: GroupType.OffChain,
+    name: "Off-Chain"
+  },
+  {
+    id: GroupType.Credential,
+    name: "Credential"
+  }
+]
 
 export default function GroupsPage() {
   const router = useRouter()
@@ -16,17 +33,38 @@ export default function GroupsPage() {
   const [_loading, setLoading] = useState<boolean>(false)
   const [_renderInfoLoading, setRenderInfoLoading] = useState<boolean>(false)
   const [_users, setUsers] = useState<string[]>([])
+  const [groupType, setGroupType] = useState(groupTypes[0])
 
   const localStorageTag = process.env.NEXT_PUBLIC_LOCAL_STORAGE_TAG!
 
-  const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
+  const offChainGroupId = process.env.NEXT_PUBLIC_BANDADA_OFF_CHAIN_GROUP_ID!
+
+  const credentialGroupId = process.env.NEXT_PUBLIC_BANDADA_CREDENTIAL_GROUP_ID!
+
+  const [groupId, setGroupId] = useState(offChainGroupId)
+
+  const dropdownOnChange = (value: string) => {
+    const selectedGroupType = groupTypes.find((val) => val.id === value)
+    const groupIdValue =
+      selectedGroupType?.id === GroupType.OffChain
+        ? offChainGroupId
+        : credentialGroupId
+    setGroupId(groupIdValue)
+    if (selectedGroupType !== undefined) {
+      setGroupType(selectedGroupType)
+    } else alert("Some error ocurred! Group type not found!")
+  }
 
   const getUsers = useCallback(async () => {
     setRenderInfoLoading(true)
     const users = await getMembersGroup(groupId)
-    setUsers(users!.reverse())
+    if (users !== null) {
+      setUsers(users!.reverse())
+      setRenderInfoLoading(false)
+      return users
+    }
     setRenderInfoLoading(false)
-    return users
+    return []
   }, [groupId])
 
   useEffect(() => {
@@ -48,7 +86,7 @@ export default function GroupsPage() {
     }
 
     isMember()
-  }, [router, getUsers, localStorageTag])
+  }, [router, getUsers, localStorageTag, groupId])
 
   // Function for credential groups to update the supabase backend
   const afterJoinCredentialGroup = useCallback(async () => {
@@ -90,10 +128,11 @@ export default function GroupsPage() {
       const param = searchParams.get("redirect")
       if (param === "true") {
         await afterJoinCredentialGroup()
+        setGroupId(credentialGroupId)
       }
     }
     execAfterJoinCredentialGroup()
-  }, [searchParams, afterJoinCredentialGroup])
+  }, [searchParams, afterJoinCredentialGroup, credentialGroupId])
 
   const joinCredentialGroup = async () => {
     setLoading(true)
@@ -115,7 +154,7 @@ export default function GroupsPage() {
     )
   }
 
-  const joinGroup = async () => {
+  const joinOffChainGroup = async () => {
     setLoading(true)
 
     const commitment = _identity?.commitment.toString()
@@ -149,6 +188,14 @@ export default function GroupsPage() {
   const renderGroup = () => {
     return (
       <div className="lg:w-2/5 md:w-2/4 w-full">
+        <div className="mb-10">
+          <Dropdown
+            title="Select group type"
+            options={groupTypes}
+            onChange={dropdownOnChange}
+          />
+        </div>
+
         <div className="flex justify-between items-center mb-10">
           <div className="text-2xl font-semibold text-slate-700">
             Feedback users ({_users?.length})
@@ -156,7 +203,7 @@ export default function GroupsPage() {
           <div>
             <button
               className="flex justify-center items-center w-auto space-x-1 verify-btn text-lg font-medium rounded-md bg-gradient-to-r text-slate-700"
-              onClick={getUsers}
+              onClick={() => getUsers()}
             >
               <span>Refresh</span>
             </button>
@@ -166,11 +213,15 @@ export default function GroupsPage() {
         <div className="flex justify-center items-center my-3">
           <button
             className="flex justify-center items-center w-full space-x-3 disabled:cursor-not-allowed disabled:opacity-50 verify-btn text-lg font-medium rounded-md px-5 py-3 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-slate-100"
-            onClick={joinGroup}
+            onClick={
+              groupType.id === groupTypes[0].id
+                ? joinOffChainGroup
+                : joinCredentialGroup
+            }
             disabled={_loading || _isGroupMember || _renderInfoLoading}
           >
             {_loading && <div className="loader"></div>}
-            <span>Join group</span>
+            <span>{`Join ${groupType.name}`}</span>
           </button>
         </div>
 

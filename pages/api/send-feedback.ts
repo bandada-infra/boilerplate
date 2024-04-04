@@ -8,12 +8,12 @@ export default async function handler(
   res: NextApiResponse
 ) {
   let errorLog = ""
-  if (typeof process.env.NEXT_PUBLIC_BANDADA_GROUP_ID !== "string") {
+  if (typeof process.env.NEXT_PUBLIC_BANDADA_OFF_CHAIN_GROUP_ID !== "string") {
     throw new Error(
-      "Please, define NEXT_PUBLIC_BANDADA_GROUP_ID in your .env.development.local or .env.production.local file"
+      "Please, define NEXT_PUBLIC_BANDADA_OFF_CHAIN_GROUP_ID in your .env.development.local or .env.production.local file"
     )
   }
-  const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
+  const groupId = process.env.NEXT_PUBLIC_BANDADA_OFF_CHAIN_GROUP_ID!
 
   const { feedback, merkleTreeRoot, nullifierHash, proof } = req.body
 
@@ -23,7 +23,7 @@ export default async function handler(
     if (!group) {
       errorLog = "This group does not exist"
       console.error(errorLog)
-      res.status(500).send(errorLog)
+      res.status(500).send({ message: errorLog })
       return
     }
 
@@ -44,11 +44,11 @@ export default async function handler(
     if (!currentMerkleRoot) {
       errorLog = "Wrong currentMerkleRoot"
       console.error(errorLog)
-      res.status(500).send(errorLog)
+      res.status(500).send({ message: errorLog })
       return
     }
 
-    if (merkleTreeRoot !== currentMerkleRoot[0].root) {
+    if (merkleTreeRoot !== currentMerkleRoot[currentMerkleRoot.length-1].root) {
       // compare merkle tree roots
       const { data: dataMerkleTreeRoot, error: errorMerkleTreeRoot } =
         await supabase.from("root_history").select().eq("root", merkleTreeRoot)
@@ -62,14 +62,14 @@ export default async function handler(
       if (!dataMerkleTreeRoot) {
         errorLog = "Wrong dataMerkleTreeRoot"
         console.error(errorLog)
-        res.status(500).send(errorLog)
+        res.status(500).send({ message: errorLog })
         return
       }
 
       if (dataMerkleTreeRoot.length === 0) {
         errorLog = "Merkle Root is not part of the group"
         console.log(errorLog)
-        res.status(500).send(errorLog)
+        res.status(500).send({ message: errorLog })
         return
       }
 
@@ -84,7 +84,7 @@ export default async function handler(
       ) {
         errorLog = "Merkle Tree Root is expired"
         console.log(errorLog)
-        res.status(500).send(errorLog)
+        res.status(500).send({ message: errorLog })
         return
       }
     }
@@ -103,14 +103,14 @@ export default async function handler(
     if (!nullifier) {
       errorLog = "Wrong nullifier"
       console.log(errorLog)
-      res.status(500).send(errorLog)
+      res.status(500).send({ message: errorLog })
       return
     }
 
     if (nullifier.length > 0) {
       errorLog = "You are using the same nullifier twice"
       console.log(errorLog)
-      res.status(500).send(errorLog)
+      res.status(500).send({ message: errorLog })
       return
     }
 
@@ -128,7 +128,7 @@ export default async function handler(
     if (!isVerified) {
       const errorLog = "The proof was not verified successfully"
       console.error(errorLog)
-      res.status(500).send(errorLog)
+      res.status(500).send({ message: errorLog })
       return
     }
 
@@ -157,7 +157,7 @@ export default async function handler(
     if (!dataFeedback) {
       const errorLog = "Wrong dataFeedback"
       console.error(errorLog)
-      res.status(500).send(errorLog)
+      res.status(500).send({ message: errorLog })
       return
     }
 

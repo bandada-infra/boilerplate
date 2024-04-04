@@ -23,7 +23,7 @@ export default function ProofsPage() {
 
   const localStorageTag = process.env.NEXT_PUBLIC_LOCAL_STORAGE_TAG!
 
-  const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
+  const groupId = process.env.NEXT_PUBLIC_BANDADA_OFF_CHAIN_GROUP_ID!
 
   useEffect(() => {
     const identityString = localStorage.getItem(localStorageTag)
@@ -54,75 +54,66 @@ export default function ProofsPage() {
     if (feedback && users) {
       setLoading(true)
 
-      try {
-        const group = new Group(groupId, 16, users)
+      const group = new Group(groupId, 16, users)
 
-        const signal = toBigInt(encodeBytes32String(feedback)).toString()
+      const signal = toBigInt(encodeBytes32String(feedback)).toString()
 
-        const { proof, merkleTreeRoot, nullifierHash } = await generateProof(
-          _identity,
-          group,
-          groupId,
-          signal
-        )
+      const externalNullifier = 1
 
-        const response = await fetch("api/send-feedback", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            feedback: signal,
-            merkleTreeRoot,
-            nullifierHash,
-            proof
-          })
+      const { proof, merkleTreeRoot, nullifierHash } = await generateProof(
+        _identity,
+        group,
+        externalNullifier,
+        signal
+      )
+
+      const response = await fetch("api/send-feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          feedback: signal,
+          merkleTreeRoot,
+          nullifierHash,
+          proof
         })
+      })
 
-        if (response.status === 200) {
-          const data = await response.json()
+      if (response.status === 200) {
+        const data = await response.json()
 
-          console.log(data[0].signal)
+        console.log("signal", data[0].signal)
 
-          if (data) setFeedback([data[0].signal, ..._feedback])
+        if (data) setFeedback([data[0].signal, ..._feedback])
 
-          console.log(`Your feedback was posted 🎉`)
-        } else {
-          console.log(await response.text())
-          alert(await response.text())
-        }
-      } catch (error) {
-        console.error(error)
-
-        alert("Some error occurred, please try again!")
-      } finally {
-        setLoading(false)
+        console.log(`Your feedback was posted 🎉`)
+      } else {
+        const responseText = (await response.json()).message
+        console.log(responseText)
+        alert(responseText)
       }
+      setLoading(false)
     }
   }
 
   const getFeedback = async () => {
     setRenderInfoLoading(true)
-    try {
-      const response = await fetch("api/get-feedback", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" }
-      })
 
-      const signals = await response.json()
+    const response = await fetch("api/get-feedback", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" }
+    })
 
-      if (response.status === 200) {
-        setFeedback(signals.map((signal: any) => signal.signal))
+    const signals = await response.json()
 
-        console.log("Feedback retrieved from the database")
-      } else {
-        alert("Some error occurred, please try again!")
-      }
-    } catch (error) {
-      console.error(error)
+    if (response.status === 200) {
+      setFeedback(signals.map((signal: any) => signal.signal))
 
+      console.log("Feedback retrieved from the database")
+    } else {
       alert("Some error occurred, please try again!")
-    } finally {
-      setRenderInfoLoading(false)
     }
+
+    setRenderInfoLoading(false)
   }
 
   const renderFeedback = () => {

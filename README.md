@@ -85,7 +85,8 @@ Update their values:
 
 ```bash
 # These can be retrieved from the Bandada dashboard (e.g., https://<dashboard_url>/groups/off-chain/<group_id>).
-NEXT_PUBLIC_BANDADA_GROUP_ID=<bandada-group-id>
+NEXT_PUBLIC_BANDADA_OFF_CHAIN_GROUP_ID=<bandada-off-chain-group-id>
+NEXT_PUBLIC_BANDADA_CREDENTIAL_GROUP_ID=<bandada-credential-group-id>
 NEXT_PUBLIC_BANDADA_ADMIN_API_KEY=<bandada-admin-api-key>
 
 # If using Supabase online, retrieve from dashboard (Project -> Settings -> API -> URL & Project API keys).

@@ -106,6 +106,11 @@ export default function GroupsPage() {
       return
     }
 
+    if (!group.credentials) {
+      alert("Some error ocurred! Group not found!")
+      return
+    }
+
     const providerName = group.credentials.id.split("_")[0].toLowerCase()
     console.log(providerName)
 

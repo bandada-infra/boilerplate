@@ -15,7 +15,9 @@ export default async function handler(
   }
   const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
 
-  const { feedback, merkleTreeRoot, nullifierHash, proof } = req.body
+  const { proof } = req.body
+  const { message, merkleTreeRoot, nullifier } = proof
+  const feedback = message
 
   try {
     const group = await getGroup(groupId)
@@ -26,8 +28,6 @@ export default async function handler(
       res.status(500).send(errorLog)
       return
     }
-
-    const merkleTreeDepth = group.treeDepth
 
     const { data: currentMerkleRoot, error: errorRootHistory } = await supabase
       .from("root_history")
@@ -89,10 +89,10 @@ export default async function handler(
       }
     }
 
-    const { data: nullifier, error: errorNullifierHash } = await supabase
+    const { data: nullifierHash, error: errorNullifierHash } = await supabase
       .from("nullifier_hash")
       .select("nullifier")
-      .eq("nullifier", nullifierHash)
+      .eq("nullifier", nullifier)
 
     if (errorNullifierHash) {
       console.log(errorNullifierHash)
@@ -114,16 +114,7 @@ export default async function handler(
       return
     }
 
-    const isVerified = await verifyProof(
-      {
-        merkleTreeRoot,
-        nullifierHash,
-        externalNullifier: groupId,
-        signal: feedback,
-        proof
-      },
-      merkleTreeDepth
-    )
+    const isVerified = await verifyProof(proof)
 
     if (!isVerified) {
       const errorLog = "The proof was not verified successfully"

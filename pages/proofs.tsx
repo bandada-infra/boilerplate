@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react"
 import { getMembersGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
 import { Group } from "@semaphore-protocol/group"
-import { generateProof } from "@semaphore-protocol/proof"
+import { SemaphoreProof, generateProof } from "@semaphore-protocol/proof"
 import {
   encodeBytes32String,
   toBigInt,
@@ -55,24 +55,24 @@ export default function ProofsPage() {
       setLoading(true)
 
       try {
-        const group = new Group(groupId, 16, users)
+        const group = new Group(users)
 
         const signal = toBigInt(encodeBytes32String(feedback)).toString()
 
-        const { proof, merkleTreeRoot, nullifierHash } = await generateProof(
+        // @todo crash. Bandada supports tree depth from 16 to 32 while
+        // Semaphore V4 beta only supports from 1 up to 12.
+        // This must be completed after V4 release and trusted setup (to support from 16 to 32).
+        const proof: SemaphoreProof = await generateProof(
           _identity,
           group,
-          groupId,
-          signal
+          signal,
+          groupId
         )
 
         const response = await fetch("api/send-feedback", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            feedback: signal,
-            merkleTreeRoot,
-            nullifierHash,
             proof
           })
         })

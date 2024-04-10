@@ -5,30 +5,37 @@ import Stepper from "@/components/stepper"
 import Divider from "@/components/divider"
 import { useSearchParams, useRouter } from "next/navigation"
 
+// Component for managing Bandada groups.
 export default function GroupsPage() {
   const router = useRouter()
 
   // To read the url params for credential groups
   const searchParams = useSearchParams()
 
+  // State variables.
   const [_identity, setIdentity] = useState<Identity>()
   const [_isGroupMember, setIsGroupMember] = useState<boolean>(false)
   const [_loading, setLoading] = useState<boolean>(false)
   const [_renderInfoLoading, setRenderInfoLoading] = useState<boolean>(false)
   const [_users, setUsers] = useState<string[]>([])
 
+  // Environment variables.
   const localStorageTag = process.env.NEXT_PUBLIC_LOCAL_STORAGE_TAG!
-
   const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
 
+  // Function to fetch users in the group.
   const getUsers = useCallback(async () => {
     setRenderInfoLoading(true)
+
     const users = await getMembersGroup(groupId)
     setUsers(users!.reverse())
+
     setRenderInfoLoading(false)
+
     return users
   }, [groupId])
 
+  // Effect to load user identity and check group membership.
   useEffect(() => {
     const identityString = localStorage.getItem(localStorageTag)
 
@@ -50,14 +57,17 @@ export default function GroupsPage() {
     isMember()
   }, [router, getUsers, localStorageTag])
 
-  // Function for credential groups to update the supabase backend
+  // Function for credential groups to update the backend.
   const afterJoinCredentialGroup = useCallback(async () => {
     setLoading(true)
+
     const group = await getGroup(groupId)
+
     if (group === null) {
       alert("Some error ocurred! Group not found!")
       return
     }
+
     const groupRoot = group.fingerprint
 
     try {
@@ -84,7 +94,7 @@ export default function GroupsPage() {
     }
   }, [groupId, router])
 
-  // useEffect that will be used for credential groups
+  // useEffect to handle actions after joining a credential group.
   useEffect(() => {
     async function execAfterJoinCredentialGroup() {
       const param = searchParams.get("redirect")
@@ -95,6 +105,7 @@ export default function GroupsPage() {
     execAfterJoinCredentialGroup()
   }, [searchParams, afterJoinCredentialGroup])
 
+  // Function to join a credential group.
   const joinCredentialGroup = async () => {
     setLoading(true)
 
@@ -119,6 +130,7 @@ export default function GroupsPage() {
     )
   }
 
+  // Function to join a group.
   const joinGroup = async () => {
     setLoading(true)
 
@@ -150,6 +162,7 @@ export default function GroupsPage() {
     }
   }
 
+  // Function to render group information.
   const renderGroup = () => {
     return (
       <div className="lg:w-2/5 md:w-2/4 w-full">

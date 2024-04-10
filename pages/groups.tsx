@@ -106,8 +106,12 @@ export default function GroupsPage() {
       return
     }
 
+    if (!group.credentials) {
+      alert("Some error ocurred! Group credentials not found!")
+      return
+    }
+
     const providerName = group.credentials.id.split("_")[0].toLowerCase()
-    console.log(providerName)
 
     window.open(
       `${process.env.NEXT_PUBLIC_BANDADA_DASHBOARD_URL}/credentials?group=${groupId}&member=${commitment}&provider=${providerName}&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/groups?redirect=true`,

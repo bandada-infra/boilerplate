@@ -19,7 +19,7 @@ The Feedback App is already deployed and configured with a manual offchain group
 
 You can begin interacting with both immediately without any additional configuration. Alternatively, you can watch a step-by-step walkthrough of how to use each application.
 
-- Manual offchain group ([demo](https://bandada-semaphore-demo.vercel.app/), [video](https://youtu.be/ji6E5ES8JcI))
+- Manual offchain group ([demo](https://demo.bandada.pse.dev/), [video](https://youtu.be/ji6E5ES8JcI))
 - Credential offchain group ([demo](https://credential-bandada-semaphore.vercel.app/), [video](https://youtu.be/K_rAzjDPYyI))
 
 ## :classical_building: Architecture
@@ -70,7 +70,7 @@ git clone https://github.com/bandada-infra/boilerplate
 and install the dependencies:
 
 ```bash
-cd bandada-semaphore-demo && yarn
+cd boilerplate && yarn
 ```
 
 ## 4. 🔧 Boilerplate Configuration

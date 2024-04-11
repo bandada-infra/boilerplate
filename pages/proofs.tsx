@@ -13,19 +13,23 @@ import {
 } from "ethers"
 import Divider from "@/components/divider"
 
+// Component for managing feedback proofs.
 export default function ProofsPage() {
   const router = useRouter()
 
+  // State variables.
   const [_identity, setIdentity] = useState<Identity>()
   const [_loading, setLoading] = useState<boolean>(false)
   const [_renderInfoLoading, setRenderInfoLoading] = useState<boolean>(false)
   const [_feedback, setFeedback] = useState<string[]>([])
 
+  // Environment variables.
   const localStorageTag = process.env.NEXT_PUBLIC_LOCAL_STORAGE_TAG!
-
   const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
 
+  // Effect to load user identity from local storage.
   useEffect(() => {
+    // Load identity from local storage or redirect to home.
     const identityString = localStorage.getItem(localStorageTag)
 
     if (!identityString) {
@@ -38,17 +42,22 @@ export default function ProofsPage() {
     setIdentity(identity)
   }, [router, localStorageTag])
 
+  // Effect to fetch feedback on component mount.
   useEffect(() => {
     getFeedback()
   }, [])
 
+  // Function to send feedback.
   const sendFeedback = async () => {
     if (!_identity) {
       return
     }
 
+    // Prompt user for feedback.
+    // The feedback can be whatever message you'd like.
     const feedback = prompt("Please enter your feedback:")
 
+    // Fetch group members and generate proof.
     const users = await getMembersGroup(groupId)
 
     if (feedback && users) {
@@ -66,6 +75,7 @@ export default function ProofsPage() {
           signal
         )
 
+        // Send feedback to the server.
         const response = await fetch("api/send-feedback", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -77,6 +87,7 @@ export default function ProofsPage() {
           })
         })
 
+        // Handle response.
         if (response.status === 200) {
           const data = await response.json()
 
@@ -99,6 +110,7 @@ export default function ProofsPage() {
     }
   }
 
+  // Function to fetch feedback from the server.
   const getFeedback = async () => {
     setRenderInfoLoading(true)
     try {
@@ -125,9 +137,11 @@ export default function ProofsPage() {
     }
   }
 
+  // Function to render feedback UI.
   const renderFeedback = () => {
     return (
       <div className="lg:w-2/5 md:w-2/4 w-full">
+        {/* Feedback display and interaction */}
         <div className="flex justify-between items-center mb-10">
           <div className="text-2xl font-semibold text-slate-700">
             Feedback signals ({_feedback?.length})

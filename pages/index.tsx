@@ -7,14 +7,20 @@ import Divider from "@/components/divider"
 export default function Home() {
   const router = useRouter()
 
+  // State to store the user's Semaphore identity.
+  // You can learn more about Semaphore identity here
+  // https://docs.semaphore.pse.dev/V3/guides/identities.
   const [_identity, setIdentity] = useState<Identity>()
 
+  // Environment variable for local storage key.
   const localStorageTag = process.env.NEXT_PUBLIC_LOCAL_STORAGE_TAG!
 
+  // Effect to load identity from local storage or prompt creation.
   useEffect(() => {
     const identityString = localStorage.getItem(localStorageTag)
 
     if (identityString) {
+      // If identity exists in local storage, load it.
       const identity = new Identity(identityString)
 
       setIdentity(identity)
@@ -27,6 +33,7 @@ export default function Home() {
     }
   }, [localStorageTag])
 
+  // Function to create a new Semaphore identity and store it.
   const createIdentity = async () => {
     const identity = new Identity()
 
@@ -54,6 +61,7 @@ export default function Home() {
 
         <div className="flex justify-center items-center">
           <div className="overflow-auto border-2 p-7 border-slate-300 space-y-3">
+            {/* Display identity details: Trapdoor, Nullifier, Commitment */}
             <div className="flex space-x-2">
               <div>Trapdoor:</div>
               <div>{_identity?.trapdoor.toString()}</div>
@@ -101,6 +109,7 @@ export default function Home() {
           </span>
         </div>
         <div className="flex justify-center items-center mt-5">
+          {/* Render identity details or creation button based on state */}
           {_identity ? (
             renderIdentity()
           ) : (
@@ -114,6 +123,7 @@ export default function Home() {
         </div>
         <div className="flex justify-center items-center mt-10">
           <div className="lg:w-2/5 md:w-2/4 w-full">
+            {/* Stepper component for navigation, enabled if identity exists */}
             <Stepper
               step={1}
               onNextClick={_identity && (() => router.push("/groups"))}

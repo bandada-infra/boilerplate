@@ -59,6 +59,8 @@ Once your project is ready, access the `Table Editor` from your project dashboar
 
 ![Tables schema](https://github.com/vplasencia/bandada-semaphore-demo/assets/20580910/e6c4362f-8f50-4ed2-87a1-a624a9b1052c)
 
+- When you are creating the tables make sure to uncheck the `Enable Row Level Security (RLS)` checkbox so that you can easily write to the database. If you have already created the tables, you can disable RLS by clicking the `Disable RLS` button. That's the quickest solution for working with the database but a real world application would have Row Level Security policies. You can learn more about it in the [Supabase docs](https://supabase.com/docs/guides/database/postgres/row-level-security).
+
 ## 3. 🛠 Boilerplate Installation
 
 Clone this repository running the following command in your terminal:

@@ -1,7 +1,7 @@
 import { Identity } from "@semaphore-protocol/identity"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
-import { getMembersGroup } from "@/utils/bandadaApi"
+import { getMembersGroup, getGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
 import { Group } from "@semaphore-protocol/group"
 import { generateProof } from "@semaphore-protocol/proof"
@@ -64,13 +64,21 @@ export default function ProofsPage() {
       setLoading(true)
 
       try {
-        const group = new Group(groupId, 16, users)
+        // Get the Bandada group details.
+        const bandadaGroup = await getGroup(groupId)
+
+        if (bandadaGroup === null) {
+          alert("The Bandada group does not exist.")
+          return
+        }
+
+        const semaphoreGroup = new Group(groupId, bandadaGroup.treeDepth, users)
 
         const signal = toBigInt(encodeBytes32String(feedback)).toString()
 
         const { proof, merkleTreeRoot, nullifierHash } = await generateProof(
           _identity,
-          group,
+          semaphoreGroup,
           groupId,
           signal
         )

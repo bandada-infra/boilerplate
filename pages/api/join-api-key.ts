@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { addMemberByApiKey, getGroup } from "@/utils/bandadaApi"
 import supabase from "@/utils/supabaseClient"
+import { getRoot } from "@/utils/useSemaphore"
 
 /**
  * API endpoint to add a member using an API key.
@@ -32,7 +33,7 @@ export default async function handler(
 
     // If group exists, update root history in the backend.
     if (group) {
-      const groupRoot = group.fingerprint
+      const groupRoot = await getRoot(groupId, group.treeDepth, group.members)
       const { error } = await supabase
         .from("root_history")
         .insert([{ root: groupRoot.toString() }])

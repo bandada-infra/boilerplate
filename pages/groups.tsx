@@ -4,6 +4,7 @@ import { getMembersGroup, getGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
 import Divider from "@/components/divider"
 import { useSearchParams, useRouter } from "next/navigation"
+import { getRoot } from "@/utils/useSemaphore"
 
 // Component for managing Bandada groups.
 export default function GroupsPage() {
@@ -68,7 +69,7 @@ export default function GroupsPage() {
       return
     }
 
-    const groupRoot = group.fingerprint
+    const groupRoot = await getRoot(groupId, group.treeDepth, group.members)
 
     try {
       const response = await fetch("api/join-credential", {

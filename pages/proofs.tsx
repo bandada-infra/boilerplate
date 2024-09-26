@@ -152,7 +152,7 @@ export default function ProofsPage() {
         {/* Feedback display and interaction */}
         <div className="flex justify-between items-center mb-10">
           <div className="text-2xl font-semibold text-slate-700">
-            Feedback signals ({_feedback?.length})
+            Feedback ({_feedback?.length})
           </div>
           <div>
             <button

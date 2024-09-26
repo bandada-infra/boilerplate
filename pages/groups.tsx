@@ -1,4 +1,4 @@
-import { Identity } from "@semaphore-protocol/identity"
+import { Identity } from "@semaphore-protocol/core"
 import React, { useCallback, useEffect, useState } from "react"
 import { getMembersGroup, getGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
@@ -69,7 +69,7 @@ export default function GroupsPage() {
       return
     }
 
-    const groupRoot = await getRoot(groupId, group.treeDepth, group.members)
+    const groupRoot = await getRoot(group.members)
 
     try {
       const response = await fetch("api/join-credential", {

@@ -1,4 +1,4 @@
-import { Identity } from "@semaphore-protocol/identity"
+import { Identity } from "@semaphore-protocol/core"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
 import Stepper from "@/components/stepper"
@@ -39,7 +39,7 @@ export default function Home() {
 
     setIdentity(identity)
 
-    localStorage.setItem(localStorageTag, identity.toString())
+    localStorage.setItem(localStorageTag, identity.export())
 
     console.log("Your new Semaphore identity was just created 🎉")
   }
@@ -59,23 +59,24 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex justify-center items-center">
-          <div className="overflow-auto border-2 p-7 border-slate-300 space-y-3">
-            {/* Display identity details: Trapdoor, Nullifier, Commitment */}
-            <div className="flex space-x-2">
-              <div>Trapdoor:</div>
-              <div>{_identity?.trapdoor.toString()}</div>
-            </div>
-            <div className="flex space-x-2">
-              <div>Nullifier:</div>
-              <div>{_identity?.nullifier.toString()}</div>
-            </div>
-            <div className="flex space-x-2">
-              <div>Commitment:</div>
-              <div>{_identity?.commitment.toString()}</div>
+        {_identity && (
+          <div className="flex justify-center items-center">
+            <div className="overflow-auto border-2 p-7 border-slate-300 space-y-3">
+              {/* Display identity details: Trapdoor, Nullifier, Commitment */}
+              <div>
+                <b>Private Key (base64)</b>:<br />
+                {_identity.export()}
+              </div>
+              <div>
+                <b>Public Key</b>:<br /> [{_identity?.publicKey[0].toString()},{" "}
+                {_identity.publicKey[1].toString()}]
+              </div>
+              <div>
+                <b>Commitment</b>:<br /> {_identity.commitment.toString()}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     )
   }
@@ -88,7 +89,7 @@ export default function Home() {
         </div>
         <div className="flex justify-center items-center mt-10">
           <span className="lg:w-2/5 md:w-2/4 w-full">
-            <span>
+            <div>
               Users interact with Bandada using a{" "}
               <a
                 className="space-x-1 text-blue-700 hover:underline"
@@ -98,13 +99,18 @@ export default function Home() {
               >
                 Semaphore identity
               </a>{" "}
-              (similar to Ethereum accounts). It contains three values:
-            </span>
-            <ol className="list-decimal pl-4 mt-5 space-y-3">
-              <li>Trapdoor: private, known only by user</li>
-              <li>Nullifier: private, known only by user</li>
-              <li>Commitment: public</li>
-            </ol>
+              (similar to Ethereum accounts). This identity consists of an{" "}
+              <a
+                className="space-x-1 text-blue-700 hover:underline"
+                href="https://github.com/privacy-scaling-explorations/zk-kit/tree/main/packages/eddsa-poseidon"
+                target="_blank"
+                rel="noreferrer noopener nofollow"
+              >
+                EdDSA
+              </a>{" "}
+              public/private key pair and a commitment, used as the public
+              identifier of the identity.
+            </div>
             <Divider />
           </span>
         </div>

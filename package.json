@@ -11,10 +11,8 @@
     "prettier:write": "prettier -w ."
   },
   "dependencies": {
-    "@bandada/api-sdk": "^2.2.11",
-    "@semaphore-protocol/group": "^3.11.0",
-    "@semaphore-protocol/identity": "^3.11.0",
-    "@semaphore-protocol/proof": "^3.11.0",
+    "@bandada/api-sdk": "^2.3.2",
+    "@semaphore-protocol/core": "^4.0.3",
     "@supabase/supabase-js": "^2.33.2",
     "@types/node": "20.5.9",
     "@types/react": "18.2.21",

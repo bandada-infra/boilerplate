@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { verifyProof } from "@semaphore-protocol/proof"
+import { verifyProof } from "@semaphore-protocol/core"
 import supabase from "@/utils/supabaseClient"
 import { getGroup } from "@/utils/bandadaApi"
 
@@ -20,7 +20,8 @@ export default async function handler(
   const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
 
   // Extract feedback, merkleTreeRoot, nullifierHash, and proof from the request body.
-  const { feedback, merkleTreeRoot, nullifierHash, proof } = req.body
+  const { merkleTreeDepth, feedback, merkleTreeRoot, nullifierHash, points } =
+    req.body
 
   try {
     // Get the group details based on the group ID.
@@ -33,9 +34,6 @@ export default async function handler(
       res.status(500).send(errorLog)
       return
     }
-
-    // Retrieve the merkle tree depth of the group
-    const merkleTreeDepth = group.treeDepth
 
     // Fetch the current merkle root from the database
     const { data: currentMerkleRoot, error: errorRootHistory } = await supabase
@@ -131,16 +129,14 @@ export default async function handler(
     }
 
     // Verify the proof using Semaphore protocol.
-    const isVerified = await verifyProof(
-      {
-        merkleTreeRoot,
-        nullifierHash,
-        externalNullifier: groupId,
-        signal: feedback,
-        proof
-      },
-      merkleTreeDepth
-    )
+    const isVerified = await verifyProof({
+      merkleTreeDepth,
+      merkleTreeRoot,
+      message: feedback,
+      nullifier: nullifierHash,
+      scope: groupId,
+      points
+    })
 
     // Handle unverified proof.
     if (!isVerified) {
@@ -165,7 +161,7 @@ export default async function handler(
     // Insert feedback into the database.
     const { data: dataFeedback, error: errorFeedback } = await supabase
       .from("feedback")
-      .insert([{ signal: feedback }])
+      .insert([{ message: feedback }])
       .select()
       .order("created_at", { ascending: false })
 

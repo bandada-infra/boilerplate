@@ -33,7 +33,7 @@ export default async function handler(
 
     // If group exists, update root history in the backend.
     if (group) {
-      const groupRoot = await getRoot(groupId, group.treeDepth, group.members)
+      const groupRoot = await getRoot(group.members)
       const { error } = await supabase
         .from("root_history")
         .insert([{ root: groupRoot.toString() }])

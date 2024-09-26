@@ -1,10 +1,8 @@
-import { Identity } from "@semaphore-protocol/identity"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
 import { getMembersGroup, getGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
-import { Group } from "@semaphore-protocol/group"
-import { generateProof } from "@semaphore-protocol/proof"
+import { Identity, Group, generateProof } from "@semaphore-protocol/core"
 import {
   encodeBytes32String,
   toBigInt,
@@ -72,15 +70,15 @@ export default function ProofsPage() {
           return
         }
 
-        const semaphoreGroup = new Group(groupId, bandadaGroup.treeDepth, users)
+        const semaphoreGroup = new Group(users)
 
-        const signal = toBigInt(encodeBytes32String(feedback)).toString()
+        const message = toBigInt(encodeBytes32String(feedback)).toString()
 
-        const { proof, merkleTreeRoot, nullifierHash } = await generateProof(
+        const proof = await generateProof(
           _identity,
           semaphoreGroup,
-          groupId,
-          signal
+          message,
+          groupId
         )
 
         // Send feedback to the server.
@@ -88,10 +86,11 @@ export default function ProofsPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            feedback: signal,
-            merkleTreeRoot,
-            nullifierHash,
-            proof
+            merkleTreeDepth: proof.merkleTreeDepth,
+            merkleTreeRoot: proof.merkleTreeRoot,
+            feedback: message,
+            nullifierHash: proof.nullifier,
+            points: proof.points
           })
         })
 
@@ -99,14 +98,15 @@ export default function ProofsPage() {
         if (response.status === 200) {
           const data = await response.json()
 
-          console.log(data[0].signal)
+          console.log(data[0].message)
 
-          if (data) setFeedback([data[0].signal, ..._feedback])
+          if (data) setFeedback([data[0].message, ..._feedback])
 
           console.log(`Your feedback was posted 🎉`)
         } else {
-          console.log(await response.text())
-          alert(await response.text())
+          const text = await response.text()
+          console.log(text)
+          alert(text)
         }
       } catch (error) {
         console.error(error)
@@ -127,10 +127,10 @@ export default function ProofsPage() {
         headers: { "Content-Type": "application/json" }
       })
 
-      const signals = await response.json()
+      const messages = await response.json()
 
       if (response.status === 200) {
-        setFeedback(signals.map((signal: any) => signal.signal))
+        setFeedback(messages.map((message: any) => message.message))
 
         console.log("Feedback retrieved from the database")
       } else {
@@ -152,7 +152,7 @@ export default function ProofsPage() {
         {/* Feedback display and interaction */}
         <div className="flex justify-between items-center mb-10">
           <div className="text-2xl font-semibold text-slate-700">
-            Feedback signals ({_feedback?.length})
+            Feedback ({_feedback?.length})
           </div>
           <div>
             <button
@@ -216,15 +216,14 @@ export default function ProofsPage() {
               Members can anonymously{" "}
               <a
                 className="space-x-1 text-blue-700 hover:underline"
-                href="https://semaphore.pse.dev/docs/guides/proofs"
+                href="https://docs.semaphore.pse.dev/guides/proofs"
                 target="_blank"
                 rel="noreferrer noopener nofollow"
               >
                 prove
               </a>{" "}
-              that they are part of a group and that they are generating their
-              own signals. Signals could be anonymous votes, leaks, reviews, or
-              feedback.
+              that they are part of a group and send their anonymous messages.
+              Messages could be votes, leaks, reviews, or feedback.
             </span>
             <Divider />
           </span>

@@ -57,7 +57,7 @@ Once your project is ready, access the `Table Editor` from your project dashboar
 - Store all nullifier hashes in the `nullifier_hash` table to prevent double signaling. Refer to the [Semaphore documentation](https://docs.semaphore.pse.dev/glossary#nullifier) for more information.
 - Store all Semaphore group roots in the `root_history` table to fix the [Merkle Tree](https://github.com/semaphore-protocol/semaphore/issues/98) (= [Semaphore groups](https://github.com/semaphore-protocol/semaphore/issues/98)) roots expiration challenge. Refer to the [conversation](https://github.com/semaphore-protocol/semaphore/issues/98) on GitHub for more information.
 
-![Tables schema](https://github.com/vplasencia/bandada-semaphore-demo/assets/20580910/e6c4362f-8f50-4ed2-87a1-a624a9b1052c)
+![Tables schema](https://github.com/user-attachments/assets/26070dfe-189b-40f0-8ebd-f47e2a721350)
 
 - When you are creating the tables make sure to uncheck the `Enable Row Level Security (RLS)` checkbox so that you can easily write to the database. If you have already created the tables, you can disable RLS by clicking the `Disable RLS` button. That's the quickest solution for working with the database but a real world application would have Row Level Security policies. You can learn more about it in the [Supabase docs](https://supabase.com/docs/guides/database/postgres/row-level-security).
 

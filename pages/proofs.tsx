@@ -1,10 +1,8 @@
-import { Identity } from "@semaphore-protocol/identity"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
-import { getMembersGroup } from "@/utils/bandadaApi"
+import { getMembersGroup, getGroup } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
-import { Group } from "@semaphore-protocol/group"
-import { generateProof } from "@semaphore-protocol/proof"
+import { Identity, Group, generateProof } from "@semaphore-protocol/core"
 import {
   encodeBytes32String,
   toBigInt,
@@ -13,19 +11,23 @@ import {
 } from "ethers"
 import Divider from "@/components/divider"
 
+// Component for managing feedback proofs.
 export default function ProofsPage() {
   const router = useRouter()
 
+  // State variables.
   const [_identity, setIdentity] = useState<Identity>()
   const [_loading, setLoading] = useState<boolean>(false)
   const [_renderInfoLoading, setRenderInfoLoading] = useState<boolean>(false)
   const [_feedback, setFeedback] = useState<string[]>([])
 
+  // Environment variables.
   const localStorageTag = process.env.NEXT_PUBLIC_LOCAL_STORAGE_TAG!
-
   const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
 
+  // Effect to load user identity from local storage.
   useEffect(() => {
+    // Load identity from local storage or redirect to home.
     const identityString = localStorage.getItem(localStorageTag)
 
     if (!identityString) {
@@ -38,56 +40,73 @@ export default function ProofsPage() {
     setIdentity(identity)
   }, [router, localStorageTag])
 
+  // Effect to fetch feedback on component mount.
   useEffect(() => {
     getFeedback()
   }, [])
 
+  // Function to send feedback.
   const sendFeedback = async () => {
     if (!_identity) {
       return
     }
 
+    // Prompt user for feedback.
+    // The feedback can be whatever message you'd like.
     const feedback = prompt("Please enter your feedback:")
 
+    // Fetch group members and generate proof.
     const users = await getMembersGroup(groupId)
 
     if (feedback && users) {
       setLoading(true)
 
       try {
-        const group = new Group(groupId, 16, users)
+        // Get the Bandada group details.
+        const bandadaGroup = await getGroup(groupId)
 
-        const signal = toBigInt(encodeBytes32String(feedback)).toString()
+        if (bandadaGroup === null) {
+          alert("The Bandada group does not exist.")
+          return
+        }
 
-        const { proof, merkleTreeRoot, nullifierHash } = await generateProof(
+        const semaphoreGroup = new Group(users)
+
+        const message = toBigInt(encodeBytes32String(feedback)).toString()
+
+        const proof = await generateProof(
           _identity,
-          group,
-          groupId,
-          signal
+          semaphoreGroup,
+          message,
+          groupId
         )
 
+        // Send feedback to the server.
         const response = await fetch("api/send-feedback", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            feedback: signal,
-            merkleTreeRoot,
-            nullifierHash,
-            proof
+            merkleTreeDepth: proof.merkleTreeDepth,
+            merkleTreeRoot: proof.merkleTreeRoot,
+            feedback: message,
+            nullifierHash: proof.nullifier,
+            points: proof.points
           })
         })
 
+        // Handle response.
         if (response.status === 200) {
           const data = await response.json()
 
-          console.log(data[0].signal)
+          console.log(data[0].message)
 
-          if (data) setFeedback([data[0].signal, ..._feedback])
+          if (data) setFeedback([data[0].message, ..._feedback])
 
           console.log(`Your feedback was posted 🎉`)
         } else {
-          console.log(await response.text())
-          alert(await response.text())
+          const text = await response.text()
+          console.log(text)
+          alert(text)
         }
       } catch (error) {
         console.error(error)
@@ -99,6 +118,7 @@ export default function ProofsPage() {
     }
   }
 
+  // Function to fetch feedback from the server.
   const getFeedback = async () => {
     setRenderInfoLoading(true)
     try {
@@ -107,10 +127,10 @@ export default function ProofsPage() {
         headers: { "Content-Type": "application/json" }
       })
 
-      const signals = await response.json()
+      const messages = await response.json()
 
       if (response.status === 200) {
-        setFeedback(signals.map((signal: any) => signal.signal))
+        setFeedback(messages.map((message: any) => message.message))
 
         console.log("Feedback retrieved from the database")
       } else {
@@ -125,12 +145,14 @@ export default function ProofsPage() {
     }
   }
 
+  // Function to render feedback UI.
   const renderFeedback = () => {
     return (
       <div className="lg:w-2/5 md:w-2/4 w-full">
+        {/* Feedback display and interaction */}
         <div className="flex justify-between items-center mb-10">
           <div className="text-2xl font-semibold text-slate-700">
-            Feedback signals ({_feedback?.length})
+            Feedback ({_feedback?.length})
           </div>
           <div>
             <button
@@ -194,15 +216,14 @@ export default function ProofsPage() {
               Members can anonymously{" "}
               <a
                 className="space-x-1 text-blue-700 hover:underline"
-                href="https://semaphore.pse.dev/docs/guides/proofs"
+                href="https://docs.semaphore.pse.dev/guides/proofs"
                 target="_blank"
                 rel="noreferrer noopener nofollow"
               >
                 prove
               </a>{" "}
-              that they are part of a group and that they are generating their
-              own signals. Signals could be anonymous votes, leaks, reviews, or
-              feedback.
+              that they are part of a group and send their anonymous messages.
+              Messages could be votes, leaks, reviews, or feedback.
             </span>
             <Divider />
           </span>

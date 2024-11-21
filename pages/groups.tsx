@@ -130,7 +130,7 @@ export default function GroupsPage() {
 
     const providerName = group.credentials.id.split("_")[0].toLowerCase()
     const dashboardUrl = DashboardUrl.DEV
-    const redirectUri = process.env.NEXT_PUBLIC_APP_URL
+    const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/groups`
 
     const url = getCredentialGroupJoinUrl(
       dashboardUrl,

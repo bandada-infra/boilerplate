@@ -3,6 +3,8 @@ import { ApiSdk, DashboardUrl, Group } from "@bandada/api-sdk"
 // Initialize Bandada API SDK.
 const bandadaApi = new ApiSdk(process.env.NEXT_PUBLIC_BANDADA_API_URL)
 
+export { DashboardUrl }
+
 /**
  * Function to get group details by groupId.
  * @param groupId The group identifier.

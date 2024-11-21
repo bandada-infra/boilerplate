@@ -3,13 +3,13 @@ import React, { useCallback, useEffect, useState } from "react"
 import {
   getMembersGroup,
   getGroup,
-  getCredentialGroupJoinUrl
+  getCredentialGroupJoinUrl,
+  DashboardUrl
 } from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
 import Divider from "@/components/divider"
 import { useSearchParams, useRouter } from "next/navigation"
 import { getRoot } from "@/utils/useSemaphore"
-import { DashboardUrl } from "@bandada/api-sdk"
 
 // Component for managing Bandada groups.
 export default function GroupsPage() {
@@ -129,7 +129,8 @@ export default function GroupsPage() {
     }
 
     const providerName = group.credentials.id.split("_")[0].toLowerCase()
-    const dashboardUrl = DashboardUrl.DEV
+    const dashboardUrl = process.env
+      .NEXT_PUBLIC_BANDADA_DASHBOARD_URL as DashboardUrl
     const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/groups`
 
     const url = getCredentialGroupJoinUrl(

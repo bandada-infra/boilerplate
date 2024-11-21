@@ -93,7 +93,7 @@ export function getCredentialGroupJoinUrl(
   commitment: string,
   providerName: string,
   redirectUri: string
-): string {
+): string | null {
   try {
     // Get credential group join URL using the Bandada API SDK.
     return bandadaApi.getCredentialGroupJoinUrl(
@@ -113,6 +113,6 @@ export function getCredentialGroupJoinUrl(
       alert("Some error occurred!")
     }
 
-    return ""
+    return null
   }
 }

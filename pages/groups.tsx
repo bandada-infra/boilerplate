@@ -1,11 +1,15 @@
 import { Identity } from "@semaphore-protocol/core"
 import React, { useCallback, useEffect, useState } from "react"
-import { getMembersGroup, getGroup } from "@/utils/bandadaApi"
+import {
+  getMembersGroup,
+  getGroup,
+  getCredentialGroupJoinUrl
+} from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
 import Divider from "@/components/divider"
 import { useSearchParams, useRouter } from "next/navigation"
 import { getRoot } from "@/utils/useSemaphore"
-import { ApiSdk, DashboardUrl, SupportedUrl } from "@bandada/api-sdk"
+import { DashboardUrl } from "@bandada/api-sdk"
 
 // Component for managing Bandada groups.
 export default function GroupsPage() {
@@ -24,9 +28,6 @@ export default function GroupsPage() {
   // Environment variables.
   const localStorageTag = process.env.NEXT_PUBLIC_LOCAL_STORAGE_TAG!
   const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
-
-  // Initialize the API SDK.
-  const apiSdk = new ApiSdk(SupportedUrl.DEV)
 
   // Function to fetch users in the group.
   const getUsers = useCallback(async () => {
@@ -131,12 +132,12 @@ export default function GroupsPage() {
     const dashboardUrl = DashboardUrl.DEV
     const redirectUri = process.env.NEXT_PUBLIC_APP_URL
 
-    const url = apiSdk.getCredentialGroupJoinUrl(
+    const url = getCredentialGroupJoinUrl(
       dashboardUrl,
       groupId,
       commitment!,
       providerName,
-      redirectUri
+      redirectUri!
     )
 
     window.open(url, "_top")
@@ -195,7 +196,7 @@ export default function GroupsPage() {
         <div className="flex justify-center items-center my-3">
           <button
             className="flex justify-center items-center w-full space-x-3 disabled:cursor-not-allowed disabled:opacity-50 verify-btn text-lg font-medium rounded-md px-5 py-3 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-slate-100"
-            onClick={joinGroup}
+            onClick={joinCredentialGroup}
             disabled={_loading || _isGroupMember || _renderInfoLoading}
           >
             {_loading && <div className="loader"></div>}

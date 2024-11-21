@@ -1,4 +1,4 @@
-import { ApiSdk, Group } from "@bandada/api-sdk"
+import { ApiSdk, DashboardUrl, Group } from "@bandada/api-sdk"
 
 // Initialize Bandada API SDK.
 const bandadaApi = new ApiSdk(process.env.NEXT_PUBLIC_BANDADA_API_URL)
@@ -75,5 +75,44 @@ export async function getMembersGroup(
     }
 
     return null
+  }
+}
+
+/**
+ * Function to get the credential group join URL.
+ * @param dashboardUrl The dashboard URL.
+ * @param groupId The group identifier.
+ * @param commitment The identity commitment.
+ * @param providerName The provider name.
+ * @param redirectUri The redirect URI.
+ * @returns The credential group join URL.
+ */
+export function getCredentialGroupJoinUrl(
+  dashboardUrl: DashboardUrl,
+  groupId: string,
+  commitment: string,
+  providerName: string,
+  redirectUri: string
+): string {
+  try {
+    // Get credential group join URL using the Bandada API SDK.
+    return bandadaApi.getCredentialGroupJoinUrl(
+      dashboardUrl,
+      groupId,
+      commitment,
+      providerName,
+      redirectUri
+    )
+  } catch (error: any) {
+    console.error(error)
+
+    // Handle errors and display appropriate alerts.
+    if (error.response) {
+      alert(error.response.statusText)
+    } else {
+      alert("Some error occurred!")
+    }
+
+    return ""
   }
 }

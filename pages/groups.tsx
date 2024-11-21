@@ -5,6 +5,7 @@ import Stepper from "@/components/stepper"
 import Divider from "@/components/divider"
 import { useSearchParams, useRouter } from "next/navigation"
 import { getRoot } from "@/utils/useSemaphore"
+import { ApiSdk, DashboardUrl, SupportedUrl } from "@bandada/api-sdk"
 
 // Component for managing Bandada groups.
 export default function GroupsPage() {
@@ -23,6 +24,9 @@ export default function GroupsPage() {
   // Environment variables.
   const localStorageTag = process.env.NEXT_PUBLIC_LOCAL_STORAGE_TAG!
   const groupId = process.env.NEXT_PUBLIC_BANDADA_GROUP_ID!
+
+  // Initialize the API SDK.
+  const apiSdk = new ApiSdk(SupportedUrl.DEV)
 
   // Function to fetch users in the group.
   const getUsers = useCallback(async () => {
@@ -124,11 +128,18 @@ export default function GroupsPage() {
     }
 
     const providerName = group.credentials.id.split("_")[0].toLowerCase()
+    const dashboardUrl = DashboardUrl.DEV
+    const redirectUri = process.env.NEXT_PUBLIC_APP_URL
 
-    window.open(
-      `${process.env.NEXT_PUBLIC_BANDADA_DASHBOARD_URL}/credentials?group=${groupId}&member=${commitment}&provider=${providerName}&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/groups?redirect=true`,
-      "_top"
+    const url = apiSdk.getCredentialGroupJoinUrl(
+      dashboardUrl,
+      groupId,
+      commitment!,
+      providerName,
+      redirectUri
     )
+
+    window.open(url, "_top")
   }
 
   // Function to join a group.

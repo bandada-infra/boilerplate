@@ -1,6 +1,11 @@
 import { Identity } from "@semaphore-protocol/core"
 import React, { useCallback, useEffect, useState } from "react"
-import { getMembersGroup, getGroup } from "@/utils/bandadaApi"
+import {
+  getMembersGroup,
+  getGroup,
+  getCredentialGroupJoinUrl,
+  DashboardUrl
+} from "@/utils/bandadaApi"
 import Stepper from "@/components/stepper"
 import Divider from "@/components/divider"
 import { useSearchParams, useRouter } from "next/navigation"
@@ -124,11 +129,24 @@ export default function GroupsPage() {
     }
 
     const providerName = group.credentials.id.split("_")[0].toLowerCase()
+    const dashboardUrl = process.env
+      .NEXT_PUBLIC_BANDADA_DASHBOARD_URL as DashboardUrl
+    const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/groups`
 
-    window.open(
-      `${process.env.NEXT_PUBLIC_BANDADA_DASHBOARD_URL}/credentials?group=${groupId}&member=${commitment}&provider=${providerName}&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/groups?redirect=true`,
-      "_top"
+    const url = getCredentialGroupJoinUrl(
+      dashboardUrl,
+      groupId,
+      commitment!,
+      providerName,
+      redirectUri!
     )
+
+    if (url === null) {
+      alert("Some error ocurred! Unable to get credential group join URL!")
+      return
+    }
+
+    window.open(url, "_top")
   }
 
   // Function to join a group.

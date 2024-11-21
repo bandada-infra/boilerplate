@@ -140,6 +140,11 @@ export default function GroupsPage() {
       redirectUri!
     )
 
+    if (url === null) {
+      alert("Some error ocurred! Unable to get credential group join URL!")
+      return
+    }
+
     window.open(url, "_top")
   }
 

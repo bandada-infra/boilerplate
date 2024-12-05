@@ -111,7 +111,7 @@ The Feedback and other apps will be deployed at the following URLs (without any 
 
 - Bandada API: http://localhost:3000
 - Bandada Dashboard: http://localhost:3001
-- Feedback App: http://localhost:3002
+- Feedback App: http://localhost:3003
 
 ## 👨‍💻 Contributing
 

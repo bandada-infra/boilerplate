@@ -1,7 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from "next"
 import { addMemberByApiKey, getGroup } from "@/utils/bandadaApi"
 import supabase from "@/utils/supabaseClient"
 import { getRoot } from "@/utils/useSemaphore"
+import type { NextApiRequest, NextApiResponse } from "next"
 
 /**
  * API endpoint to add a member using an API key.
@@ -13,14 +13,14 @@ export default async function handler(
   res: NextApiResponse
 ) {
   // Check if the admin API key is defined.
-  if (typeof process.env.NEXT_PUBLIC_BANDADA_ADMIN_API_KEY !== "string") {
+  if (typeof process.env.BANDADA_ADMIN_API_KEY !== "string") {
     throw new Error(
-      "Please, define NEXT_PUBLIC_BANDADA_ADMIN_API_KEY in your .env.development.local or .env.production.local file"
+      "Please, define BANDADA_ADMIN_API_KEY in your .env.development.local or .env.production.local file"
     )
   }
 
   // Retrieve the admin API key.
-  const apiKey = process.env.NEXT_PUBLIC_BANDADA_ADMIN_API_KEY!
+  const apiKey = process.env.BANDADA_ADMIN_API_KEY!
   // Extract groupId and commitment from the request body.
   const { groupId, commitment } = req.body
 

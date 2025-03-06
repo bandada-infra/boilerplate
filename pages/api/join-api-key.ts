@@ -15,7 +15,7 @@ export default async function handler(
   // Check if the admin API key is defined.
   if (typeof process.env.BANDADA_ADMIN_API_KEY !== "string") {
     throw new Error(
-      "Please, define NEXT_PUBLIC_BANDADA_ADMIN_API_KEY in your .env.development.local or .env.production.local file"
+      "Please, define BANDADA_ADMIN_API_KEY in your .env.development.local or .env.production.local file"
     )
   }
 
